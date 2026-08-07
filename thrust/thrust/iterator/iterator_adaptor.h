@@ -27,9 +27,13 @@
 #elif defined(_CCCL_IMPLICIT_SYSTEM_HEADER_MSVC)
 #  pragma system_header
 #endif // no system header
+
 #include <thrust/detail/use_default.h>
 #include <thrust/iterator/detail/iterator_adaptor_base.h>
 #include <thrust/iterator/iterator_facade.h>
+
+#include <cuda/std/__type_traits/enable_if.h>
+#include <cuda/std/__type_traits/is_default_constructible.h>
 
 THRUST_NAMESPACE_BEGIN
 
@@ -131,7 +135,11 @@ protected:
 public:
   /*! \p iterator_adaptor's default constructor does nothing.
    */
-  iterator_adaptor() = default;
+  template <class _Dummy = Derived, enable_if_t<::cuda::std::is_default_constructible_v<Base>, int> = 0>
+  _CCCL_EXEC_CHECK_DISABLE
+  _CCCL_HOST_DEVICE iterator_adaptor()
+      : m_iterator()
+  {}
 
   /*! This constructor copies from a given instance of the \p Base iterator.
    */
