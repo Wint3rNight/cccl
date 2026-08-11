@@ -36,7 +36,7 @@ template <class _Tp>
 using add_pointer_t _CCCL_NODEBUG_ALIAS = _CCCL_BUILTIN_ADD_POINTER(_Tp);
 
 #else // ^^^ _CCCL_BUILTIN_ADD_POINTER ^^^ / vvv !_CCCL_BUILTIN_ADD_POINTER vvv
-template <class _Tp, bool = __cccl_is_referenceable<_Tp>::value || is_void<_Tp>::value>
+template <class _Tp, bool = __cccl_is_referenceable<_Tp>::value || is_void_v<_Tp>>
 struct __add_pointer_impl
 {
   using type _CCCL_NODEBUG_ALIAS = remove_reference_t<_Tp>*;
