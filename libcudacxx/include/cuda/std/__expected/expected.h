@@ -587,6 +587,24 @@ public:
                             : static_cast<_Tp>(::cuda::std::forward<_Up>(__v));
   }
 
+  template <class _Up = _Err>
+  [[nodiscard]] _CCCL_API constexpr _Err error_or(_Up&& __error) const&
+  {
+    static_assert(is_copy_constructible_v<_Err>, "error_type has to be copy constructible");
+    static_assert(is_convertible_v<_Up, _Err>, "argument has to be convertible to error_type");
+
+    return (this->__has_val_) ? ::cuda::std::forward<_Up>(__error) : this->__union_.__unex_;
+  }
+
+  template <class _Up = _Err>
+  [[nodiscard]] _CCCL_API constexpr _Err error_or(_Up&& __error) &&
+  {
+    static_assert(is_move_constructible_v<_Err>, "error_type has to be move constructible");
+    static_assert(is_convertible_v<_Up, _Err>, "argument has to be convertible to error_type");
+
+    return (this->__has_val_) ? ::cuda::std::forward<_Up>(__error) : ::cuda::std::move(this->__union_.__unex_);
+  }
+
   // [expected.object.monadic]
   _CCCL_TEMPLATE(class _Fun, class _Err2 = _Err)
   _CCCL_REQUIRES(is_constructible_v<_Err2, _Err2&>)
@@ -1451,6 +1469,24 @@ public:
   {
     _CCCL_ASSERT(!this->__has_val_, "expected::error requires the expected to contain an error");
     return ::cuda::std::move(this->__union_.__unex_);
+  }
+
+  template <class _Up = _Err>
+  [[nodiscard]] _CCCL_API constexpr _Err error_or(_Up&& __error) const&
+  {
+    static_assert(is_copy_constructible_v<_Err>, "error_type has to be copy constructible");
+    static_assert(is_convertible_v<_Up, _Err>, "argument has to be convertible to error_type");
+
+    return (this->__has_val_) ? ::cuda::std::forward<_Up>(__error) : this->__union_.__unex_;
+  }
+
+  template <class _Up = _Err>
+  [[nodiscard]] _CCCL_API constexpr _Err error_or(_Up&& __error) &&
+  {
+    static_assert(is_move_constructible_v<_Err>, "error_type has to be move constructible");
+    static_assert(is_convertible_v<_Up, _Err>, "argument has to be convertible to error_type");
+
+    return (this->__has_val_) ? ::cuda::std::forward<_Up>(__error) : ::cuda::std::move(this->__union_.__unex_);
   }
 
   // [expected.void.monadic]
